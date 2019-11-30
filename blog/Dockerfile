@@ -6,6 +6,6 @@ WORKDIR /src
 
 RUN jekyll build 
 
-FROM nginx/1.16.1
+FROM nginx:stable
 
 COPY --from=build /src/_site/ /usr/share/nginx/html
