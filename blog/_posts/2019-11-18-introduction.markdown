@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Introduction"
-date:   2019-11-18 16:32:36 -0600
-categories: jekyll update
+date:   2019-11-18 22:32:36 +0100
+categories: misc
 ---
 In this blog, I will try to share my journey to the Kubernetes land.
 
