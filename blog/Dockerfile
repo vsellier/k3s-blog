@@ -4,7 +4,7 @@ COPY . /src
 
 WORKDIR /src
 
-RUN jekyll build 
+RUN ls -al && jekyll build 
 
 FROM nginx:stable
 
