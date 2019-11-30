@@ -2,7 +2,7 @@
 layout: post
 title:  "Introduction"
 date:   2019-11-18 22:32:36 +0100
-categories: misc
+tags: [misc]
 ---
 In this blog, I will try to share my journey to the Kubernetes land.
 
