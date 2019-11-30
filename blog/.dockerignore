@@ -1,0 +1,4 @@
+blog/_site
+# blog/.jekyll-cache  
+Dockerfile
+.dockerignore
