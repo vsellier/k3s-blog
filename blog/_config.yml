@@ -24,7 +24,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Blogging about Kubernetes / k3s / raspberrypi. 
   Powered by k3s running on RaspberryPi
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "http://k3s-blog.wip.ovh" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: vsellier
 github_username:  vsellier
 
@@ -32,6 +32,8 @@ github_username:  vsellier
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -52,3 +54,5 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+google_analytics: UA-5045453-6
