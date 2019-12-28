@@ -29,3 +29,5 @@ All the tests I would like to do with this cluster :
 - CI/CD
 - Deployment pipeline
 - ... Everything else I will think off ...
+
+(This post will be used as the blog description)
