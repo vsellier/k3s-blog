@@ -67,5 +67,4 @@ It's possible to push it manually ao automaticcaly (with the ``--push`` option) 
 ## Generate from A to Z
 
 To be able to create the image from the base on an arm computer, a dedicated jekyll image compatible with the arm arch have to be created.
-
-To Be Continued...
+This will be covered in another post later if needed as it's not blocker with my current development environment.
