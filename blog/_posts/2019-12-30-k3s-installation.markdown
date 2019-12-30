@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "K3S Installation"
-date:   2019-11-23 12:21:30 +0100
+date:   2019-12-30 12:00:00 +0100
 tags: [kubernetes, raspberry, freebox delta]
 ---
 
