@@ -15,7 +15,7 @@ The testing environment will be composed by few arm powered servers :
 
 - 1 raspberrypi 4 (RPI4), 4Go of RAM, booting on a 1To external USB SATA drive, Raspbian 10 (buster)
 - 1 raspberrypi 3B+ (RPI3), 1Go of RAM, booting on a 1To external USB SATA drive, Raspbian 8 (jessie)
-- 1 ARM powered VMs (VMB), 1 1CPU, 386Mo RAM, 40Go of disk space, Ubuntu 19.10. This VM is running on an internet box and will be the entry point of the cluster from the internet.
+- 1 ARM powered VMs (VMB), 1 1CPU, 384Mo RAM, 40Go of disk space, Ubuntu 19.10. This VM is running on an internet box and will be the entry point of the cluster from the internet.
 
 It's not compliant with all the prerequisites needed by k3s :
 
@@ -154,3 +154,40 @@ vmb    Ready    <none>   5s    v1.16.3-k3s.2
 
 For the moment, the cluster is up without any node disctinction. The services will be deployed according the resources available on the workers.
 The node with the most resources available will be used primarily, the RPI4 node in this case.
+
+## First issue
+
+A difference of behaviour happens on the VMB node (the one with few memory) :
+```
+----system---- --total-cpu-usage-- -dsk/total- -net/total- ---paging-- ---system-- ---load-avg--- ------memory-usage----- ----swap---
+     time     |usr sys idl wai stl| read  writ| recv  send|  in   out | int   csw | 1m   5m  15m | used  free  buff  cach| used  free
+30-12 18:03:41|  4  31  50  14   0|  70M    0 | 439B 4468B|   0     0 |1950  3016 |3.22 4.36 2.72| 298M 5320k  680k 14.8M|   0     0
+30-12 18:03:42|  7  49  36   8   0| 128M    0 |1196B 2398B|   0     0 |3362  4482 |3.22 4.36 2.72| 298M 3280k  136k 17.3M|   0     0
+30-12 18:03:43|  4  36  55   6   0|  96M    0 | 151B  542B|   0     0 |2462  3190 |3.20 4.34 2.72| 298M 3304k  132k 17.1M|   0     0
+30-12 18:03:44|  8  69  12  10   0| 261M    0 |3548B 4670B|   0     0 |6067  7344 |3.20 4.34 2.72| 298M 6120k  136k 14.5M|   0     0
+30-12 18:03:45|  6  77   0  17   0| 145M    0 | 307B  768B|   0     0 |4357  4937 |3.20 4.34 2.72| 298M 4780k  140k 15.5M|   0     0
+...
+30-12 18:05:41|  7  92   0   1   0| 679M  240k|3965B 9459B|   0     0 |  11k   15k|4.04 4.16 2.85| 300M 4456k  144k 13.8M|   0     0  missed 5 ticks
+30-12 18:05:46|  6  93   0   2   0| 394M   24k|2142B 4692B|   0     0 |7558    11k|4.04 4.16 2.85| 300M 2972k  204k 15.2M|   0     0  missed 5 ticks
+30-12 18:05:49|  8  90   0   2   0| 398M    0 |2477B   10k|   0     0 |  14k   19k|4.12 4.18 2.86| 299M 4204k  488k 14.4M|   0     0  missed 2 ticks
+30-12 18:06:00|  7  90   0   3   0|1528M 1504k|  15k   29k|   0     0 |  40k   52k|5.39 4.45 2.97| 300M 3768k  164k 15.0M|   0     0  missed 12 ticks
+30-12 18:06:16|  6  92   0   1   0|2153M 3056k|7235B   18k|   0     0 |  45k   60k|6.05 4.66 3.07| 300M 2776k  216k 15.8M|   0     0  missed 16 ticks
+```
+The load is high and there is a lot of I/O. The server became unresponsive after few minutes.
+
+The OOM killer was here :
+```
+Dec 30 18:08:17 front kernel: [606280.177800] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=system.slice,mems_allowed=0,global_oom,task_memcg=/kubepods/besteffort/podbe1e663f-f7a1-4b90-bdfd-bb30afdf7c37/53463dbb01e95cfa79e16677e4a67317688384cc5b6c54d416b48dce0f406b4c,task=entry,pid=19227,uid=0
+Dec 30 18:08:17 front kernel: [606280.177828] Out of memory: Killed process 19227 (entry) total-vm:1656kB, anon-rss:120kB, file-rss:4kB, shmem-rss:0kB
+...
+Dec 30 18:11:08 front k3s[19377]: containerd: signal: killed
+Dec 30 18:11:08 front systemd[1]: k3s-agent.service: Main process exited, code=exited, status=1/FAILURE
+Dec 30 18:11:08 front systemd[1]: k3s-agent.service: Failed with result 'exit-code'.
+Dec 30 18:11:13 front systemd[1]: k3s-agent.service: Service RestartSec=5s expired, scheduling restart.
+Dec 30 18:11:13 front systemd[1]: k3s-agent.service: Scheduled restart job, restart counter is at 8.
+Dec 30 18:11:13 front systemd[1]: Stopped Lightweight Kubernetes.
+Dec 30 18:11:14 front systemd[1]: k3s-agent.service: Found left-over process 9987 (containerd-shim) in control group while starting unit. Ignoring.
+```
+
+First limit reached, 384Mo of ram is definitely not enough for ``k3s``.
+Increasing the memory to 512Mo solved the issue, everything returned to normal.
