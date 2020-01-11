@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The blog's docker image"
+title:  "Building the blog's docker image"
 date:   2019-11-26 18:21:30 +0100
 tags: [docker, docker-hub, raspberry, buildx]
 ---
