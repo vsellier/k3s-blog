@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k3s-blog
+spec:
+  selector:
+    matchLabels:
+      app: k3s-blog
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: k3s-blog
+    spec:
+      containers:
+      - name: blog
+        image: vsellier/k3s-blog:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

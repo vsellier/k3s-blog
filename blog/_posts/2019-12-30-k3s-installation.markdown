@@ -1,5 +1,6 @@
 ---
 layout: post
+post_url: installation
 title:  "K3S Installation"
 date:   2019-12-30 12:00:00 +0100
 tags: [kubernetes, raspberry, freebox delta]

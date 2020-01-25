@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k3s-blog
+spec:
+  selector:
+    matchLabels:
+      app: k3s-blog
+
+  replicas: 2 # tells deployment to run 2 pods matching the template
+
+  template:
+    metadata:
+      labels:
+        app: k3s-blog
+    spec:
+      affinity:
+        # Select the node to deploy on
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nodeType
+                operator: In
+                values:
+                  - compute
+        # Avoid to deploy the same pod several time on the same node
+        # for more resiliency
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                  topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                      - k3s-blog
+      containers:
+      - name: blog
+        image: vsellier/k3s-blog:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

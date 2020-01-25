@@ -1,0 +1,82 @@
+---
+layout: post
+title:  "Upgrade to 1.17.0"
+date:   2020-01-16 14:00:00 +0100
+tags: [kubernetes, k3s]
+---
+
+
+```
+Jan 16 21:24:08 k3s-agent k3s[3388]: E0116 21:24:08.077935    3388 csi_plugin.go:271] Failed to initialize CSINodeInfo: error updating CSINode annotation: timed out waiting for the condition; caused by: the server could not find the requested resource
+```
+
+## Upgrade the master
+```
+root@raspberrypi:~# chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI4 /tmp/install.sh
+[INFO]  Finding latest release
+[INFO]  Using v1.17.0+k3s.1 as release
+[INFO]  Downloading hash https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/sha256sum-arm.txt
+[INFO]  Downloading binary https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/k3s-armhf
+[INFO]  Verifying binary download
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Skipping /usr/local/bin/kubectl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/crictl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/ctr symlink to k3s, already exists
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+[INFO]  systemd: Enabling k3s unit
+Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
+[INFO]  systemd: Starting k3s
+```
+
+```
+./k3s kubectl get nodes
+NAME   STATUS    ROLES    AGE   VERSION
+vmb    Ready     <none>   25m   v1.17.0+k3s.1
+rpi4   Ready     master   17d   v1.17.0+k3s.1
+rpi3   Ready     <none>   17d   v1.16.3-k3s.2
+```
+
+```
+./k3s kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+k3s-blog-7c6fcf8774-k88bk   1/1     Running   0          2d11h
+k3s-blog-7c6fcf8774-5r9qd   1/1     Running   0          4d4h
+```
+
+## Upgrade the agent
+
+```
+wget https://get.k3s.io -O /tmp/install.sh
+chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI3 /tmp/install.sh
+root@salon:~# chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI3 /tmp/install.sh
+[INFO]  Finding latest release
+[INFO]  Using v1.17.0+k3s.1 as release
+[INFO]  Downloading hash https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/sha256sum-arm.txt
+[INFO]  Downloading binary https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/k3s-armhf
+[INFO]  Verifying binary download
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Skipping /usr/local/bin/kubectl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/crictl symlink to k3s, already exists
+[INFO]  Skipping /usr/local/bin/ctr symlink to k3s, already exists
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+[INFO]  systemd: Enabling k3s unit
+Created symlink from /etc/systemd/system/multi-user.target.wants/k3s.service to /etc/systemd/system/k3s.service.
+[INFO]  systemd: Starting k3s
+```
+
+```
+NAME   STATUS   ROLES    AGE   VERSION
+vmb    Ready    <none>   31m   v1.17.0+k3s.1
+rpi4   Ready    master   17d   v1.17.0+k3s.1
+rpi3   Ready    <none>   17d   v1.17.0+k3s.1
+
+NAME                        READY   STATUS    RESTARTS   AGE
+k3s-blog-7c6fcf8774-k88bk   1/1     Running   0          2d11h
+k3s-blog-7c6fcf8774-5r9qd   1/1     Running   0          4d4h
+```
