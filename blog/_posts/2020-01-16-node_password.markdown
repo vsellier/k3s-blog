@@ -176,7 +176,7 @@ The problem seems to be common when the versions of a node is not in sync with t
 
 A new k3s version was issued between the first cluster installation and the vms reinstallation. The new agent is in version ``v1.17.0+k3s.1`` as the other nodes are in version ``v1.16.3-k3s.2``.
 
-It's possible to force the installer to install a specific version during the installation with the parameter ``INSTALL_K3S_VERSION`` but unfortunately, rancher has changed the versions number format in the interval and the installer can't find the previous 1.16 versions :
+It's possible to force the installer to install a specific version during the installation with the parameter ``INSTALL_K3S_VERSION`` but unfortunately, rancher has changed the version number format in the interval and the installer can't find the previous 1.16 versions :
 
 ![Version changes](/assets/k3s-versions.png)
 

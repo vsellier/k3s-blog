@@ -62,7 +62,7 @@ $ docker buildx build --platform linux/arm/v7 -t vsellier/k3s-blog -f Dockerfile
 ```
 This command creates an **arm/v7** image directly on a x64 laptop.
 
-It's possible to push it manually ao automaticcaly (with the ``--push`` option) to docker hub. Its
+It's possible to push it manually ao automaticaly (with the ``--push`` option) to docker hub. Its
 
 ## Generate from A to Z
 
