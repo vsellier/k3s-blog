@@ -30,3 +30,7 @@ All the tests I would like to do with this cluster :
 - CI/CD
 - Deployment pipeline
 - ... Everything else I will think off ...
+
+## The Lab
+
+![The cluster topology](/assets/cluster-topology.png)
