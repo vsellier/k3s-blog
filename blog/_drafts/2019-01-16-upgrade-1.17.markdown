@@ -5,14 +5,38 @@ date:   2020-01-16 14:00:00 +0100
 tags: [kubernetes, k3s]
 ---
 
+## Recap
+
+After [an agent reinstallation]({% post_url 2020-01-16-node_password %}), the node never came back to the ready state with this error :
 
 ```
 Jan 16 21:24:08 k3s-agent k3s[3388]: E0116 21:24:08.077935    3388 csi_plugin.go:271] Failed to initialize CSINodeInfo: error updating CSINode annotation: timed out waiting for the condition; caused by: the server could not find the requested resource
 ```
 
-## Upgrade the master
+The new node is running a more recent version than the master :
+
 ```
-root@raspberrypi:~# chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI4 /tmp/install.sh
+./k3s kubectl get nodes
+NAME   STATUS    ROLES    AGE   VERSION
+vmb    Ready     <none>   25m   v1.17.0+k3s.1
+rpi4   Ready     master   17d   v1.17.0+k3s.1
+rpi3   Ready     <none>   17d   v1.16.3-k3s.2
+```
+
+Some other persons had the same error on [stackoverflow](https://stackoverflow.com/questions/59291108/worker-start-to-fail-csinodeifo-error-updating-csinode-annotation). It's probably due to the several changes on the [CSI](https://kubernetes-csi.github.io/docs/) component on the [1.17 version](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.17.md).
+
+The full cluster has to be updated as the previous k3s version is not available anymore.
+
+[The upgrade procedure](https://rancher.com/docs/k3s/latest/en/upgrades/) is quite simple :
+
+1. Launch the k3s install script on the master
+1. Launch the k3s install script on the slaves
+
+## Upgrade the master
+
+```
+$ wget https://get.k3s.io -O /tmp/install.sh && chmod u+x /tmp/install.sh
+$ sudo K3S_NODE_NAME=RPI4 /tmp/install.sh
 [INFO]  Finding latest release
 [INFO]  Using v1.17.0+k3s.1 as release
 [INFO]  Downloading hash https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/sha256sum-arm.txt
@@ -31,14 +55,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc
 [INFO]  systemd: Starting k3s
 ```
 
-```
-./k3s kubectl get nodes
-NAME   STATUS    ROLES    AGE   VERSION
-vmb    Ready     <none>   25m   v1.17.0+k3s.1
-rpi4   Ready     master   17d   v1.17.0+k3s.1
-rpi3   Ready     <none>   17d   v1.16.3-k3s.2
-```
-
+The master is responding well, there was no restart of the pods and no downtime, as expected :
 ```
 ./k3s kubectl get pods
 NAME                        READY   STATUS    RESTARTS   AGE
@@ -49,9 +66,8 @@ k3s-blog-7c6fcf8774-5r9qd   1/1     Running   0          4d4h
 ## Upgrade the agent
 
 ```
-wget https://get.k3s.io -O /tmp/install.sh
-chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI3 /tmp/install.sh
-root@salon:~# chmod u+x /tmp/install.sh && sudo K3S_NODE_NAME=RPI3 /tmp/install.sh
+$ wget https://get.k3s.io -O /tmp/install.sh && chmod u+x /tmp/install.sh
+$ sudo K3S_NODE_NAME=RPI3 /tmp/install.sh
 [INFO]  Finding latest release
 [INFO]  Using v1.17.0+k3s.1 as release
 [INFO]  Downloading hash https://github.com/rancher/k3s/releases/download/v1.17.0+k3s.1/sha256sum-arm.txt
@@ -70,13 +86,31 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/k3s.service to 
 [INFO]  systemd: Starting k3s
 ```
 
+Compared to the initial installation, there is no need to specify the ``K3S_TOKEN`` and the ``K3S_URL`` as these properties are persisted in the configuration.
+
+The ``K3S_NODE_NAME`` must be provided, if not, the default hostname of the server will be used to identified the agent on the cluster.
+
+## Validations
+
+* All the nodes are ready:
+
 ```
+$ sudo ./k3s kubectl get nodes
 NAME   STATUS   ROLES    AGE   VERSION
 vmb    Ready    <none>   31m   v1.17.0+k3s.1
 rpi4   Ready    master   17d   v1.17.0+k3s.1
 rpi3   Ready    <none>   17d   v1.17.0+k3s.1
+```
 
+* All the pods are running and were not redeployed during the upgrade:
+
+```
+$ sudo ./k3s kubectl get pods
 NAME                        READY   STATUS    RESTARTS   AGE
 k3s-blog-7c6fcf8774-k88bk   1/1     Running   0          2d11h
 k3s-blog-7c6fcf8774-5r9qd   1/1     Running   0          4d4h
 ```
+
+Everything looks good and the upgrade was very smooth.
+
+<iframe src="https://giphy.com/embed/xu3nTl5OdCuqs" width="480" height="288" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/cat-fist-bump-xu3nTl5OdCuqs">via GIPHY</a></p>
