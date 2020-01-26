@@ -1,7 +1,7 @@
 ---
 layout: page
 title: References
-permalink: /references
+permalink: /references.html
 ---
 
 This is the interesting references discovered during the different searchs

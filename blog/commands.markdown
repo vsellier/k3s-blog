@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Useful commands
-permalink: /commands
+permalink: /commands.html
 ---
 
 | command | description |
