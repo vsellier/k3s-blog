@@ -48,7 +48,7 @@ rpi4   Ready    master   12d   v1.16.3-k3s.2
 ```bash
 sudo ./k3s kubectl label node rpi3 nodeType=compute
 node/rpi3 labeled
-./k3s kubectl label node rpi4 nodeType=compute
+sudo ./k3s kubectl label node rpi4 nodeType=compute
 node/rpi4 labeled
 ```
 
