@@ -168,7 +168,7 @@ A service is composed of few properties, basically, the type, the selector to ta
 The type of service here is ``ClusterIP`` as the service will be exposed by the ingress controller. 
 The other possible types of services and their use cases are explained on the [official documentation](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types).
 
-```
+```bash
 $ sudo ./k3s kubectl apply -f service.yml
 service/k3s-blog created
 $ sudo ./k3s kubectl describe services/k3s-blog
@@ -199,7 +199,7 @@ An ingress is the same concept as an apache vhost. Several information have to b
 * The name of the service and the port to forward to matching the ``Name`` and the ``Port`` values declared on the previous step
 
 Let's try if everything is working :
-```
+```bash
 $ http --header http://k3s-blog.wip.ovh
 HTTP/1.1 200 OK
 ...
