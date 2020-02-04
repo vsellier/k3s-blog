@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Deploying the static site"
-date:   2020-01-05 12:00:00 +0100
+date:   2020-02-03 12:00:00 +0100
 tags: [kubernetes, jekyll, ingress, traefik]
 ---
 
