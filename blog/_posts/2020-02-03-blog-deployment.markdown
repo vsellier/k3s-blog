@@ -206,4 +206,4 @@ HTTP/1.1 200 OK
 ```
 
 The site is working. Any node of the cluster can be used as the entry point. The requests are redirected to traefik via internal proxies.
-The internal communitcation mechanism will be described in another post.
+The internal communication mechanism will be described in another post.
