@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: k3s-blog
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - k3s-blog.wip.ovh
+    secretName: k3s-blog-crt
+  rules:
+  - host: k3s-blog.wip.ovh
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: k3s-blog
+          servicePort: 80

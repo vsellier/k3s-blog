@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: k3s-blog.wip.ovh
+spec:
+  secretName: k3s-blog-crt
+  dnsNames:
+  - k3s-blog.wip.ovh
+  issuerRef:
+    name: letsencrypt
+  commonName: k3s-blog.wip.ovh
