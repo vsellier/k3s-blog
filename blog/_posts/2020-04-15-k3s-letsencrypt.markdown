@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "K3S - Let's Encrypt"
+title:  "HTTPS & Let's Encrypt"
 date:   2020-02-08 12:00:00 +0100
-tags: [kubernetes, k3s, traefik 1.7, let's encrypt, cert-manager, https]
+tags: [kubernetes, k3s, traefik 1.7, let's encrypt, cert-manager, https, TLS v1.0, TLS v1.1, certificate]
 ---
 
 ## Introduction
