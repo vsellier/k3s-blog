@@ -148,7 +148,7 @@ Now the certificate is generated and available for use, the ingress control can 
 The [``tls``](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) section is used for that.
 The site is now available by http and https..
 
-An additional line property ``ingress.kubernetes.io/ssl-redirect: "true"`` is also added on the metadat section to force the redirection from http to https
+An additional property ``ingress.kubernetes.io/ssl-redirect: "true"`` is also added on the metadata section to force the redirection from http to https
 
 ```bash
 $ curl -v -s http://k3s-blog.wip.ovh
